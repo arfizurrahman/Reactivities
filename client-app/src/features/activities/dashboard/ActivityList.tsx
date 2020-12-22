@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Item, Label, Divider } from 'semantic-ui-react';
+import { Item, Divider } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../app/stores/store';
 import ActivityListItem from './ActivityListItem';
