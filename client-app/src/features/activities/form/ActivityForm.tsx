@@ -135,9 +135,7 @@ const ActivityForm = () => {
                             </Form>
                         )}
                     />
-
                 </Segment>
-
             </Grid.Column>
         </Grid>
 
