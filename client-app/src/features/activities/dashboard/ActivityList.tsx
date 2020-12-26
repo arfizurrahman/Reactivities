@@ -3,6 +3,7 @@ import { Item, Divider } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../app/stores/store';
 import ActivityListItem from './ActivityListItem';
+import { format } from 'date-fns'
 
 const ActivityList: React.FC = () => {
     const { activityStore: { activitiesByDate } } = useStore();
@@ -10,7 +11,7 @@ const ActivityList: React.FC = () => {
         <Fragment>
             {activitiesByDate.map(([group, activities]) => (
                 <Fragment key={group} >
-                    <Divider horizontal>{group}</Divider>
+                    <Divider horizontal style={{ textTransform: 'none' }}>{format(group, 'eeee do MMMM')}</Divider>
                     {/* <Label size="large" color="blue">
                         
                     </Label> */}
