@@ -17,7 +17,7 @@ const SelectInput: React.FC<IProps> = ({
                 placeholder={placeholder}
             />
             {touched && error && (
-                <Label basic color='red'>{error}</Label>
+                <Label basic style={{ margin: '.3em .14285714em' }} color='red'>{error}</Label>
             )}
         </Form.Field>
     )

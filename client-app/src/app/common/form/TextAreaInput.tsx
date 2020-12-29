@@ -12,7 +12,7 @@ const TextAreaInput: React.FC<IProps> = ({
         <Form.Field error={touched && !!error} width={width} >
             <textarea {...input} placeholder={placeholder} rows={rows} />
             {touched && error && (
-                <Label basic color='red'>{error}</Label>
+                <Label style={{ margin: '.3em .14285714em' }} basic color='red'>{error}</Label>
             )}
         </Form.Field>
     )
