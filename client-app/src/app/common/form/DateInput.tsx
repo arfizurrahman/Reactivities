@@ -21,7 +21,7 @@ const DateInput: React.FC<IProps> = ({
                 time={time}
             />
             {touched && error && (
-                <Label basic color='red'>{error}</Label>
+                <Label basic color='red' style={{ margin: '.3em .14285714em' }}>{error}</Label>
             )}
         </Form.Field>
     )
