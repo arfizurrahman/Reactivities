@@ -12,7 +12,7 @@ interface RouteParams {
 }
 
 const ProfilePage: React.FC<RouteComponentProps<RouteParams>> = ({ match }) => {
-    const { profileStore: { loadingProfile, loadProfile, profile } } = useStore()
+    const { profileStore: { loadingProfile, loadProfile, profile, follow, unfollow, isCurrentUser, loading, setActiveTab } } = useStore()
 
     useEffect(() => {
         loadProfile(match.params.username)
@@ -23,8 +23,12 @@ const ProfilePage: React.FC<RouteComponentProps<RouteParams>> = ({ match }) => {
     return (
         <Grid>
             <Grid.Column width={16}>
-                <ProfileHeader profile={profile!} />
-                <ProfileContent />
+                <ProfileHeader profile={profile!}
+                    isCurrentUser={isCurrentUser}
+                    loading={loading}
+                    follow={follow}
+                    unfollow={unfollow} />
+                <ProfileContent setActiveTab={setActiveTab} />
             </Grid.Column>
         </Grid>
     )
