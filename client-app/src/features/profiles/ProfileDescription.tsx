@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Tab, Grid, Header, Button } from 'semantic-ui-react';
 import { useStore } from '../../app/stores/store';
 import ProfileEditForm from './ProfileEditForm';

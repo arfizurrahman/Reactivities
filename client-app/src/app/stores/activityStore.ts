@@ -1,7 +1,7 @@
 import { createAttendee } from './../common/util/util';
 import { toast } from 'react-toastify';
 import { history } from '../..';
-import { makeAutoObservable, configure, runInAction, observable } from 'mobx';
+import { makeAutoObservable, configure, runInAction, observable, reaction } from 'mobx';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { IActivity } from '../models/activity';
 import agent from '../api/agent';
@@ -21,9 +21,19 @@ export default class ActivityStore {
     @observable.ref hubConnection: HubConnection | null = null;
     activityCount = 0;
     page = 0;
+    predicate = new Map();
 
     constructor() {
         makeAutoObservable(this)
+
+        reaction(
+            () => this.predicate.keys(),
+            () => {
+                this.page = 0;
+                this.activityRegistry.clear();
+                this.loadActivities();
+            }
+        )
     }
 
     get totalPages() {
@@ -32,6 +42,28 @@ export default class ActivityStore {
 
     get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()))
+    }
+
+    get axiosParams() {
+        const params = new URLSearchParams();
+        params.append('limit', String(LIMIT));
+        params.append('offset', `${this.page ? this.page * LIMIT : 0}`);
+        this.predicate.forEach((value, key) => {
+            if (key === 'startDate') {
+                params.append(key, value.toISOString());
+            } else {
+                params.append(key, value);
+            }
+        })
+        return params;
+    }
+
+    setPredicate = (predicate: string, value: string | Date) => {
+        this.predicate.clear();
+        if (predicate !== 'all') {
+            this.predicate.set(predicate, value);
+        }
+
     }
 
     setPage = (page: number) => {
@@ -97,7 +129,7 @@ export default class ActivityStore {
     loadActivities = async () => {
         this.loadingInitial = true;
         try {
-            const { activities, activityCount } = await agent.Activities.list(LIMIT, this.page);
+            const { activities, activityCount } = await agent.Activities.list(this.axiosParams);
             runInAction(() => {
                 activities.forEach(activity => {
                     setActivityProps(activity, store.userStore.user!)

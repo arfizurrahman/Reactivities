@@ -19,23 +19,23 @@ namespace Persistence
                     new AppUser
                     {
                         Id = "a",
-                        DisplayName = "Bob",
-                        UserName = "bob",
-                        Email = "bob@test.com"
+                        DisplayName = "John",
+                        UserName = "john",
+                        Email = "john@test.com"
                     },
                     new AppUser
                     {
                         Id = "b",
-                        DisplayName = "Jane",
-                        UserName = "jane",
-                        Email = "jane@test.com"
+                        DisplayName = "Arfiz",
+                        UserName = "arfiz",
+                        Email = "arfiz@test.com"
                     },
                     new AppUser
                     {
                         Id = "c",
-                        DisplayName = "Tom",
-                        UserName = "tom",
-                        Email = "tom@test.com"
+                        DisplayName = "Farez",
+                        UserName = "farez",
+                        Email = "farez@test.com"
                     },
                 };
 
