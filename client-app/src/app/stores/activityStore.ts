@@ -10,6 +10,8 @@ import { setActivityProps } from '../common/util/util';
 
 configure({ enforceActions: 'always' });
 
+const LIMIT = 2;
+
 export default class ActivityStore {
     activityRegistry = new Map();
     activity: IActivity | null = null;
@@ -17,13 +19,23 @@ export default class ActivityStore {
     loading = false;
     submitting = false;
     @observable.ref hubConnection: HubConnection | null = null;
+    activityCount = 0;
+    page = 0;
 
     constructor() {
         makeAutoObservable(this)
     }
 
+    get totalPages() {
+        return Math.ceil(this.activityCount / LIMIT);
+    }
+
     get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()))
+    }
+
+    setPage = (page: number) => {
+        this.page = page;
     }
 
     createHubConnection = (activityId: string) => {
@@ -85,12 +97,13 @@ export default class ActivityStore {
     loadActivities = async () => {
         this.loadingInitial = true;
         try {
-            const activities = await agent.Activities.list();
+            const { activities, activityCount } = await agent.Activities.list(LIMIT, this.page);
             runInAction(() => {
                 activities.forEach(activity => {
                     setActivityProps(activity, store.userStore.user!)
                     this.activityRegistry.set(activity.id, activity);
                 });
+                this.activityCount = activityCount;
                 this.loadingInitial = false;
             })
         } catch (error) {
