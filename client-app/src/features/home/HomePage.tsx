@@ -6,6 +6,7 @@ import LoginForm from '../user/LoginForm';
 import RegisterForm from '../user/RegisterForm';
 
 function HomePage() {
+    const token = window.localStorage.getItem('jwt');
     const { userStore: { isLoggedIn, user }, modalStore: { openModal } } = useStore();
 
     return (
@@ -15,7 +16,7 @@ function HomePage() {
                     <Image size='massive' src='/assets/logo.png' alt='logo' style={{ marginBottom: 12 }} />
                         Reactivities
                     </Header>
-                {isLoggedIn && user ? (
+                {isLoggedIn && user && token ? (
                     <Fragment>
                         <Header as='h2' inverted content={`Welcome back ${user.displayName}`} />
                         <Button as={Link} to='/activities' size='huge' inverted>

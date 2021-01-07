@@ -25,10 +25,16 @@ axios.interceptors.response.use(undefined, error => {
         return;
     }
 
-    const { status, data, config } = error.response;
+    const { status, data, config, headers } = error.response;
 
     if (status === 404) {
         history.push('/notfound');
+    }
+
+    if (status === 401 && headers['www-authenticate'].includes('Bearer error="invalid_token", error_description="The token expired')) {
+        window.localStorage.removeItem('jwt');
+        history.push('/');
+        toast.info('Your session has expired, please login again')
     }
 
     if (status === 400 && config.method === 'get' && data.errors.hasOwnProperty('id')) {
@@ -75,6 +81,8 @@ const User = {
     current: (): Promise<IUser> => requests.get('/user'),
     login: (user: IUserFormValues): Promise<IUser> => requests.post('/user/login', user),
     register: (user: IUserFormValues): Promise<IUser> => requests.post('/user/register', user),
+    fbLogin: (accessToken: string) =>
+        requests.post(`/user/facebook`, { accessToken })
 }
 
 const Profiles = {

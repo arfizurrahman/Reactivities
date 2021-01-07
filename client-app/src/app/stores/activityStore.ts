@@ -1,7 +1,7 @@
 import { createAttendee } from './../common/util/util';
 import { toast } from 'react-toastify';
 import { history } from '../..';
-import { makeAutoObservable, configure, runInAction, observable, reaction } from 'mobx';
+import { makeAutoObservable, configure, runInAction, observable, reaction, toJS } from 'mobx';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { IActivity } from '../models/activity';
 import agent from '../api/agent';
@@ -78,7 +78,8 @@ export default class ActivityStore {
             .configureLogging(LogLevel.Information)
             .build();
 
-        this.hubConnection.start()
+        this.hubConnection
+            .start()
             .then(() => console.log(this.hubConnection!.state))
             .then(() => {
                 console.log('Attempting to join group');
@@ -149,7 +150,7 @@ export default class ActivityStore {
         let activity = this.getActivity(id);
         if (activity) {
             this.activity = activity;
-            return activity;
+            return toJS(activity);
         } else {
             this.loadingInitial = true;
             try {

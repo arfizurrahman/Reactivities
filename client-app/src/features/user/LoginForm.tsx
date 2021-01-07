@@ -1,12 +1,14 @@
 import React from 'react'
 import { Form as FinalForm, Field } from 'react-final-form'
-import { Button, Form, Header } from 'semantic-ui-react'
+import { Button, Divider, Form, Header } from 'semantic-ui-react'
 import { useStore } from '../../app/stores/store';
 import TextInput from '../../app/common/form/TextInput'
 import ErrorMessage from '../../app/common/form/ErrorMessage'
 import { IUserFormValues } from '../../app/models/user';
 import { FORM_ERROR } from 'final-form';
 import { combineValidators, isRequired } from 'revalidate';
+import SocialLogin from './SocialLogin'
+import { observer } from 'mobx-react-lite';
 
 const validate = combineValidators({
     email: isRequired('email'),
@@ -15,7 +17,7 @@ const validate = combineValidators({
 
 const LoginForm = () => {
 
-    const { userStore: { login } } = useStore();
+    const { userStore: { login, fbLogin, loading } } = useStore();
 
     return (
         <FinalForm
@@ -55,10 +57,12 @@ const LoginForm = () => {
                         loading={submitting}
                         color='teal'
                         content='Login' fluid />
+                    <Divider horizontal>Or</Divider>
+                    <SocialLogin loading={loading} fbCallback={fbLogin} />
                 </Form>
             )}
         />
     )
 }
 
-export default LoginForm
+export default observer(LoginForm)

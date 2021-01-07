@@ -8,6 +8,7 @@ configure({ enforceActions: 'always' });
 
 export default class UserStore {
     user: IUser | null = null;
+    loading = false;
 
     constructor() {
         makeAutoObservable(this)
@@ -33,6 +34,26 @@ export default class UserStore {
         store.commonStore.setToken(null);
         this.user = null;
         history.push('/')
+    }
+
+    fbLogin = async (response: any) => {
+        this.loading = true;
+        try {
+            const user = await agent.User.fbLogin(response.accessToken);
+            runInAction(() => {
+                this.user = user;
+                store.commonStore.setToken(user.token);
+                store.modalStore.closeModal();
+                this.loading = false;
+            });
+
+            history.push('/activities');
+        } catch (error) {
+            runInAction(() => {
+                this.loading = false;
+            })
+            throw error;
+        }
     }
 
     register = async (values: IUserFormValues) => {
