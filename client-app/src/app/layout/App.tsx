@@ -19,12 +19,12 @@ const App: React.FC<RouteComponentProps> = observer(({ location }) => {
   const { commonStore: { setAppLoaded, token, appLoaded }, userStore: { getUser } } = useStore();
 
   useEffect(() => {
-    if (token) {
+    if (token && !appLoaded) {
       getUser().finally(() => setAppLoaded());
     } else {
       setAppLoaded();
     }
-  }, [getUser, setAppLoaded, token]);
+  }, [getUser, setAppLoaded, token, appLoaded]);
 
   if (!appLoaded) return <LoadingComponent content="Loading app..." />
 
