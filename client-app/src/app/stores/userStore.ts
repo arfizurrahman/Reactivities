@@ -20,12 +20,14 @@ export default class UserStore {
     login = async (values: IUserFormValues) => {
         try {
             const user = await agent.User.login(values);
+            console.log(user);
             runInAction(() => {
                 this.user = user;
+                store.commonStore.setToken(user.token);
+                this.startRefreshTokenTimer(user);
+                store.modalStore.closeModal()
             })
-            store.commonStore.setToken(user.token);
-            this.startRefreshTokenTimer(user);
-            store.modalStore.closeModal()
+
             history.push('/activities');
         } catch (error) {
             throw error;
@@ -62,6 +64,9 @@ export default class UserStore {
     register = async (values: IUserFormValues) => {
         try {
             const user = await agent.User.register(values);
+            runInAction(() => {
+                this.user = user;
+            })
             store.commonStore.setToken(user.token);
             this.startRefreshTokenTimer(user);
             store.modalStore.closeModal();
@@ -77,9 +82,9 @@ export default class UserStore {
             const user = await agent.User.refreshToken();
             runInAction(() => {
                 this.user = user;
+                store.commonStore.setToken(user.token);
+                this.startRefreshTokenTimer(user);
             })
-            store.commonStore.setToken(user.token);
-            this.startRefreshTokenTimer(user);
         } catch (error) {
             console.log(error)
         }
@@ -90,9 +95,9 @@ export default class UserStore {
             const user = await agent.User.current();
             runInAction(() => {
                 this.user = user;
+                store.commonStore.setToken(user.token);
+                this.startRefreshTokenTimer(user);
             });
-            store.commonStore.setToken(user.token);
-            this.startRefreshTokenTimer(user);
         } catch (error) {
             console.log(error);
         }

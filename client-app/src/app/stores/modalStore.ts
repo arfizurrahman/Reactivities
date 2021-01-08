@@ -1,4 +1,4 @@
-import { makeAutoObservable, configure, observable } from 'mobx';
+import { makeAutoObservable, configure, observable, runInAction } from 'mobx';
 
 configure({ enforceActions: 'always' });
 
@@ -12,12 +12,16 @@ export default class ModalStore {
     }
 
     openModal = (content: any) => {
-        this.modal.open = true;
-        this.modal.body = content;
+        runInAction(() => {
+            this.modal.open = true;
+            this.modal.body = content;
+        })
     }
 
     closeModal = () => {
-        this.modal.open = false;
-        this.modal.body = null;
+        runInAction(() => {
+            this.modal.open = false;
+            this.modal.body = null;
+        })
     }
 }
